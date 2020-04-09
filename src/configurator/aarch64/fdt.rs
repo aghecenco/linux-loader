@@ -66,3 +66,63 @@ impl BootConfigurator for FdtBootConfigurator {
             .map_err(|_| Error::WriteFDTToMemory.into())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::loader::tests::MEM_SIZE;
+    use vm_memory::{Address, GuestAddress, GuestMemoryMmap};
+
+    // Maximum size of the device tree blob.
+    const FDT_MAX_SIZE: usize = 0x20_0000;
+    // Start of RAM on 64 bit ARM.
+    const DRAM_MEM_START: u64 = 0x8000_0000; // 2 GB.
+
+    fn create_guest_mem() -> GuestMemoryMmap {
+        GuestMemoryMmap::from_ranges(&[(GuestAddress(0x0), (MEM_SIZE as usize))]).unwrap()
+    }
+
+    #[derive(Clone, Copy, Default)]
+    struct FdtPlaceholder {
+        content: Vec<u8>,
+    }
+    unsafe impl ByteValued for FdtPlaceholder {}
+
+    #[test]
+    fn test_configure_fdt_boot() {
+        let mut fdt = FdtPlaceholder {
+            content: vec![0u8; FDT_MAX_SIZE + 1],
+        };
+        let guest_memory = create_guest_mem();
+
+        let mut fdt_addr = GuestAddress(DRAM_MEM_START);
+        if let Some(addr) = guest_memory
+            .last_addr()
+            .checked_sub(FDT_MAX_SIZE as u64 - 1)
+        {
+            if guest_memory.address_in_range(addr) {
+                fdt_addr = addr;
+            }
+        }
+
+        // Error case: FDT doesn't fit in guest memory.
+        eprintln!(
+            "{}",
+            FdtBootConfigurator::write_bootparams::<
+                FdtPlaceholder,
+                FdtPlaceholder,
+                FdtPlaceholder,
+                GuestMemoryMmap,
+            >(BootParams::new(fdt, fdt_addr, None, None), &guest_memory,)
+        );
+        //            .is_ok());
+
+        assert!(FdtBootConfigurator::write_bootparams::<
+            FdtPlaceholder,
+            FdtPlaceholder,
+            FdtPlaceholder,
+            GuestMemoryMmap,
+        >(BootParams::new(fdt, fdt_addr, None, None), &guest_memory,)
+        .is_ok());
+    }
+}

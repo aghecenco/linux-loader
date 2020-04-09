@@ -135,7 +135,7 @@ mod tests {
     use vm_memory::{Address, GuestAddress, GuestMemoryMmap};
 
     const XEN_HVM_START_MAGIC_VALUE: u32 = 0x336ec578;
-    const MEM_SIZE: u64 = 0x1000000;
+    const MEM_SIZE: u64 = 0x100_0000;
     const E820_RAM: u32 = 1;
 
     fn create_guest_mem() -> GuestMemoryMmap {
