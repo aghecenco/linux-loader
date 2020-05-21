@@ -200,6 +200,7 @@ pub const EDD_INFO_MEDIA_CHANGE_NOTIFICATION: u32 = 16;
 pub const EDD_INFO_LOCKABLE: u32 = 32;
 pub const EDD_INFO_NO_MEDIA_PRESENT: u32 = 64;
 pub const EDD_INFO_USE_INT13_FN50: u32 = 128;
+pub const E820_RAM: u32 = 1;
 pub const E820_MAX_ENTRIES_ZEROPAGE: u32 = 128;
 pub const JAILHOUSE_SETUP_REQUIRED_VERSION: u32 = 1;
 pub type __s8 = ::std::os::raw::c_schar;
