@@ -148,7 +148,8 @@ impl KernelLoader for PE {
             .map_err(|_| Error::SeekImageHeader)?;
         guest_mem
             .read_exact_from(mem_offset, kernel_image, kernel_size)
-            .map_err(|_| Error::ReadKernelImage)?;
+            .unwrap();
+//            .map_err(|_| Error::ReadKernelImage)?;
 
         loader_result.kernel_end = mem_offset
             .raw_value()
