@@ -24,17 +24,11 @@ use std::fmt::{self, Display};
 use std::io::{Read, Seek};
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
+use crate::loader_gen::bootparam;
+
+#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 use vm_memory::ByteValued;
 use vm_memory::{Address, Bytes, GuestAddress, GuestMemory, GuestUsize};
-
-#[allow(dead_code)]
-#[allow(non_camel_case_types)]
-#[allow(non_snake_case)]
-#[allow(non_upper_case_globals)]
-#[allow(missing_docs)]
-#[cfg_attr(feature = "cargo-clippy", allow(clippy::all))]
-#[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
-pub mod bootparam;
 
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 mod x86_64;

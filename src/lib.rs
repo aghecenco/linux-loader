@@ -29,4 +29,7 @@ pub mod cmdline;
 pub mod configurator;
 pub mod loader;
 
+mod loader_gen;
+pub use loader_gen::*;
+
 extern crate vm_memory;
