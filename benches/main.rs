@@ -20,6 +20,8 @@ mod aarch64;
 #[cfg(target_arch = "aarch64")]
 use aarch64::*;
 
+#[cfg(target_arch = "aarch64")]
+use linux_loader::configurator::fdt::FdtBootConfigurator;
 #[cfg(any(target_arch = "x86", target_arch = "x86_64"))]
 use linux_loader::configurator::pvh::PvhBootConfigurator;
 use linux_loader::configurator::BootConfigurator;
@@ -64,6 +66,7 @@ pub fn criterion_benchmark(c: &mut Criterion) {
 
 #[cfg(target_arch = "aarch64")]
 pub fn criterion_benchmark(c: &mut Criterion) {
+    let guest_mem = create_guest_memory();
     let fdt_boot_params = build_fdt_boot_params();
     c.bench_function("configure_fdt", |b| {
         b.iter(|| {

@@ -8,16 +8,13 @@ extern crate criterion;
 extern crate linux_loader;
 extern crate vm_memory;
 
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
-
-use linux_loader::configurator::fdt::FdtBootConfigurator;
-use linux_loader::configurator::{BootConfigurator, BootParams};
+use linux_loader::configurator::BootParams;
 use vm_memory::{ByteValued, GuestAddress, GuestMemoryMmap};
 
 const MEM_SIZE: usize = 0x100_0000;
 const FDT_MAX_SIZE: usize = 0x20;
 
-fn create_guest_memory() -> GuestMemoryMmap {
+pub fn create_guest_memory() -> GuestMemoryMmap {
     GuestMemoryMmap::from_ranges(&[(GuestAddress(0x0), MEM_SIZE)]).unwrap()
 }
 
