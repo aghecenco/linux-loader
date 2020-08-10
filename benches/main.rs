@@ -42,7 +42,7 @@ criterion_group! {
 
 // NOP because the `criterion_main!` macro doesn't support cfg(feature)
 // macro expansions.
-#[cfg(not(feature = "bzimage"))]
+#[cfg(any(target_arch = "aarch64", not(feature = "bzimage")))]
 criterion_group! {
     name = benches_bzimage;
     // Sample size must be >= 10.
