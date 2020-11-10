@@ -102,6 +102,34 @@ impl KernelLoader for BzImage {
     where
         F: Read + Seek,
     {
+        /*
+        Offset	Proto	Name		Meaning
+        /Size
+
+        01FE/2	ALL	boot_flag	0xAA55 magic number
+        */
+
+        let mut magic_number = 0u16;
+        kernel_image.seek(SeekFrom::Start(0x1FE)).unwrap();
+        magic_number.as_bytes().read_from(0, kernel_image, 2).unwrap();
+        eprintln!("bzImage\t0x1FE\t{:?}", magic_number.to_le_bytes());
+        kernel_image.seek(SeekFrom::Start(0)).unwrap();
+
+        let mut hdrs = 0u32;
+        kernel_image.seek(SeekFrom::Start(0x202)).unwrap();
+        hdrs.as_bytes().read_from(0, kernel_image, 4).unwrap();
+        eprintln!("bzImage\0x202\t{:?}", hdrs.to_le_bytes());
+        kernel_image.seek(SeekFrom::Start(0)).unwrap();
+
+        let mut version = 0u16;
+        version.as_bytes().read_from(0, kernel_image, 2).unwrap();
+        eprintln!("ELF\0x206\t{:?}", version.to_le_bytes());
+        kernel_image.seek(SeekFrom::Start(0)).unwrap();
+
+        
+
+
+
         let mut kernel_size = kernel_image
             .seek(SeekFrom::End(0))
             .map_err(|_| Error::SeekBzImageEnd)? as usize;
